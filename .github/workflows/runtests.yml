@@ -13,8 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set execute permission for Selenium Manager
-      run: chmod +x $(find . -name "selenium-manager")
+
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Setup .NET
