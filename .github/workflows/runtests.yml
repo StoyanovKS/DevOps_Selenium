@@ -1,4 +1,3 @@
-
 name: RUN UI tests
 
 on:
@@ -9,20 +8,31 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-
     - name: Checkout repository
       uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 6.0.x
+
+    - name: Install Chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+
+    - name: Grant Execution Permissions for Selenium Manager
+      run: |
+        find . -type f -name "selenium-manager" -exec chmod +x {} \; || echo "Selenium Manager not found"
+
     - name: Restore dependencies
       run: dotnet restore
+
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore --configuration Debug
+
     - name: Run UI Test
-      run: dotnet test --no-build --verbosity normal
+      run: xvfb-run --auto-servernum dotnet test --no-build --configuration Debug --verbosity normal
